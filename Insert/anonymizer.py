@@ -18,12 +18,8 @@ def single_dim_mondrian(data, k, QI_index):
         # splitVal（中央値）の決定
         QI_values = []
         for record in data:
-            values_index_count = 0
             for value in record.values():
-                if values_index_count == QI_index:
-                    QI_values.append(value[QI_index])
-                else:
-                    values_index_count += 1
+                QI_values.append(value[QI_index])
         splitVal = median(QI_values) # partition に使用する閾値
 
         # split  
