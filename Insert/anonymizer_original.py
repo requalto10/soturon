@@ -1,12 +1,14 @@
 """ 
 data type
-[{int: [QI,QI,...]}, {int: [QI,QI,...]}, ..., {int: [QI,QI,...]}]
+[{int: [QI,QI,...]}, {int: [QI,QI,...]}...]
 
 """
 
-
+from curses import use_default_colors
 from statistics import median
+from types import NoneType
 
+from pyparsing import rest_of_line
 
 # １つのQIについてmondrian的にクラスタリング
 # QI_index : 何番目のQiを partition に使用するか(0 ~ QIの数-1)
@@ -42,9 +44,6 @@ def single_dim_split(data, k, QI_index):
             return data
    
 
-
-
-
 # 同一のSA値をもつレコードを上から順にk個集めてq*ブロックとし、
 # QIを、q*ブロック内にあるQI値すべてを含むリストに一般化
 # data <- rest_of_records
@@ -52,41 +51,26 @@ def single_dim_split(data, k, QI_index):
 def simple_k_anonymizer(data, blocks=[], k=2, QI_index=0, SA_index=-1):
     used_record_keys = []
     generalized_QI_vals = []
-    rest_of_records = []
+    SA_val = list(data[0].values())[0][SA_index]
     count = 0
 
-    # ここから書き直し
-    for i, record in enumerate(data):
-        used_record_keys.append(list(record.keys())[0])
-        for after_record in data[i+1:]:
-            for key, val_list in after_record.items():
-                if val_list[SA_index] == list(record.values())[0][SA_index]:
-                    count += 1
-                    if not val_list[QI_index] in generalized_QI_vals:
-                        generalized_QI_vals.append(val_list[QI_index])
-                    used_record_keys.append(key)
-
-            # 同じSA値がk個貯まったら、
-            # そのｋ個を一般化したブロックをblocksに追加
-            # そのk個を除いたデータセットrest_of_recordsを作る。
-            if count == k:
-                for r in data:
-                    k = list(r.keys())[0]
-                    if k in used_record_keys:
-                        blocks.append({k: sorted(generalized_QI_vals)})
-                    else:
-                        rest_of_records.append(r)
-                count = 0
-                return rest_of_records, blocks
-
-"""         if count < k:
-            count = 0
-            used_record_keys = []
-            generalized_QI_vals = [] """
-        
+    for record in data:
+        for key, val_list in record.items():
+            print(SA_val, SA_val == val_list[SA_index])
+            if SA_val == val_list[SA_index]:
+                count += 1
+                used_record_keys.append(key)
+                if not val_list[QI_index] in generalized_QI_vals:
+                    generalized_QI_vals.append(val_list[QI_index])
+                if count == k:
+                    break
+            else:
+                continue
+    
+    rest_of_records = []
 
     # これ以上ブロックを作れないとき、全レコードのQIを一般化
-"""     if count < k:
+    if count < k:
         generalized_QI_vals = []
         keys = []
         for record in data:
@@ -103,6 +87,8 @@ def simple_k_anonymizer(data, blocks=[], k=2, QI_index=0, SA_index=-1):
         if key in used_record_keys:
             blocks.append({key: sorted(generalized_QI_vals)})
         else:
-            rest_of_records.append(record) """
+            rest_of_records.append(record)
+
+    return simple_k_anonymizer(rest_of_records, blocks)
 
 

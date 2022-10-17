@@ -1,11 +1,8 @@
-from unittest import result
 from Utility import read_file
-import anonymizer
+import anonymizer_original
 
-# csvの読み出し
-data = read_file.read_csv("Data/soturon_random_data.csv", True)
 
-result = anonymizer.single_dim_mondrian(data, 3, 0)
+data = read_file.read_csv("Data/random_data.csv", True)
+
+result = anonymizer_original.simple_k_anonymizer(data)
 print(result)
-
-

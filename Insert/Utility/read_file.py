@@ -9,7 +9,7 @@ Columns must be like below.
 
 
 def read_csv(file_path, # "path_name"
-        header=False,
+        header=False, # headerの有無
         delimiter=',', 
         encoding="utf-8"
     ):
@@ -22,9 +22,9 @@ def read_csv(file_path, # "path_name"
             lines = lines[1:]
         for line in lines:
             temp_list = [item.strip() for item in line.split(delimiter)]
-            QI_int_list = []
+            QI_value_list = []
             for str_num in temp_list[1:]:
-                QI_int_list.append(int(str_num))
-            temp_dict = {int(temp_list[0]): QI_int_list}
+                QI_value_list.append(int(str_num))
+            temp_dict = {int(temp_list[0]): QI_value_list}
             data.append(temp_dict)
         return data
