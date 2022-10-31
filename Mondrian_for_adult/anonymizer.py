@@ -90,26 +90,19 @@ if __name__ == '__main__':
         print("Relax Mondrian")
     else:
         print("Strict Mondrian")
-    if DATA_SELECT == 'i':
-        print("INFORMS data")
-        DATA = read_informs()
-    else:
-        print("Adult data")
-        # INTUITIVE_ORDER is an intuitive order for
-        # categorical attributes. This order is produced
-        # by the reading (from data set) order.
-        DATA, INTUITIVE_ORDER = read_adult()
-        print(INTUITIVE_ORDER)
+
+    print("Adult data")
+    # INTUITIVE_ORDER is an intuitive order for
+    # categorical attributes. This order is produced
+    # by the reading (from data set) order.
+    DATA, INTUITIVE_ORDER = read_adult()
+    print(INTUITIVE_ORDER)
+    
     if LEN_ARGV > 3:
         FLAG = sys.argv[3]
-    if FLAG == 'k':
-        get_result_k(DATA)
-    elif FLAG == 'qi':
+
+    if FLAG == 'qi':
         get_result_qi(DATA, sys.argv[4], sys.argv[5])
-    elif FLAG == 'data':
-        get_result_dataset(DATA)
-    elif FLAG == '':
-        get_result_one(DATA)
     else:
         try:
             INPUT_K = int(FLAG)
