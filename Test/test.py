@@ -29,7 +29,7 @@ for i in range(3):
 att_values[0].add(1)
 att_values[0].add(1)
 att_values[1].add(2)
-print(att_values)
+# print(att_values)
 
 
 

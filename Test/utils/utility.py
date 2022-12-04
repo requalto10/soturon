@@ -1,7 +1,7 @@
 # anonymized_int : '24~29', '34~40', ...
 # domain : int, その数値属性の定義域
 def calc_int_IL(anonymized_int, domain):
-    print('aaaaa', anonymized_int)
+    print('anonymized_int: ', anonymized_int)
 
     if not '~' in anonymized_int:
         return 0

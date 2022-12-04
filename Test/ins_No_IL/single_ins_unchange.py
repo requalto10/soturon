@@ -1,7 +1,7 @@
 import pandas as pd
 
-df = pd.read_csv('./data/test/test_k=2.csv', names=('age', 'occupation', 'index', 'income'))
-add_rec = pd.read_csv('./data/test/rec_to_ins.csv', names=('age', 'occupation', 'index', 'income'))
+df = pd.read_csv('../data/test/test_k=2.csv', names=('age', 'occupation', 'index', 'income'))
+add_rec = pd.read_csv('../data/test/rec_to_ins.csv', names=('age', 'occupation', 'index', 'income'))
 # original = pd.read_csv('./data/test/test_raw.csv', names=('age', 'occupation', 'index', 'income'))
 
 add_age = add_rec.at[0, 'age']
@@ -67,4 +67,4 @@ df = df.reset_index(drop=True)
 
 print(df)
 
-#df.to_csv('./data/result/ingle_inserted_no_change.csv', header=False, index=None)
+#df.to_csv('../data/result/ingle_inserted_no_change.csv', header=False, index=None)

@@ -1,9 +1,9 @@
 import pandas as pd
 from utils.utility import calc_int_IL, calc_cat_IL, count_blks
 
-df = pd.read_csv('./data/test3/test_k=2.csv', names=('age', 'occupation', 'index', 'income'))
-add_rec = pd.read_csv('./data/test3/rec_to_ins.csv', names=('age', 'occupation', 'index', 'income'))
-original = pd.read_csv('./data/test3/test_raw.csv', names=('age', 'occupation', 'index', 'income'))
+df = pd.read_csv('../data/test3/test_k=2.csv', names=('age', 'occupation', 'index', 'income'))
+add_rec = pd.read_csv('../data/test3/rec_to_ins.csv', names=('age', 'occupation', 'index', 'income'))
+original = pd.read_csv('../data/test3/test_raw.csv', names=('age', 'occupation', 'index', 'income'))
 
 add_age = int(add_rec.at[0, 'age'])
 add_occ = add_rec.at[0, 'occupation']

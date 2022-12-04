@@ -50,9 +50,9 @@ def convert_to_raw(result, connect_str='~'):
     return convert_result
 
 
-df = pd.read_csv('data/test3_9att_2int/test_k=2.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
-add_rec = pd.read_csv('data/test3_9att_2int/rec_to_ins.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
-original = pd.read_csv('data/test3_9att_2int/test_raw.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
+df = pd.read_csv('./data/test3_9att_2int/test_k=2.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
+add_rec = pd.read_csv('./data/test3_9att_2int/rec_to_ins.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
+original = pd.read_csv('./data/test3_9att_2int/test_raw.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
 
 attribute_widths = {
     'age': 7,  # ７は適当、original['age'].iloc[-1].max() - original['age'].iloc[-1].min(),
@@ -81,6 +81,8 @@ blk_size_to_change = 0
 
 # 全ブロックから追加先ブロックを見つける
 for i, blk_size in enumerate(blks):
+    #print('---------------')
+    #print('for文何回目: ', i)
     id = sum(blks[:i])  # ブロックの先頭レコードのid
     IL_before = 0
     IL_after = 0
@@ -114,6 +116,7 @@ for i, blk_size in enumerate(blks):
     # raw_blkにmodrianをかける
     new_blk = get_result_qi(raw_blk, len(QI_list), 2) 
     new_blk = pd.DataFrame(new_blk, columns=cols)  # リストをDataFrameに変換
+    #print('new_blk: ', new_blk)
 
     # 各qiについてILを計算（IL_after）
     # １レコード分のILを計算
@@ -129,28 +132,29 @@ for i, blk_size in enumerate(blks):
     # ブロックのサイズ分の合計にする
     IL_after *= blk_size
 
+    #print(IL_after, IL_before)
     if IL_after - IL_before < IL_diff:
         IL_diff = IL_after - IL_before
         blk_to_change = id
         changed_blk = new_blk
         blk_size_to_change = blk_size
-    print('id!!!!', blk_to_change)
-print('blk_size!!!!', blk_size_to_change)
+    #print('blk_to_change: ', blk_to_change)
+#print('blk_size_to_change: ', blk_size_to_change)
 
 
 if blk_to_change < 0:
-    pass  # add_recが入れるblkが無いため、妥協したblkを探す
+    print('追加できるq*ブロックがありません。')  # add_recが入れるblkが無いため、妥協したblkを探す
 else:
     drop_ids = []
-    for i in range(id, id + blk_size_to_change + 1):
-        drop_ids.append(str(i))
-    print(df)
-    df = df.drop(index=drop_ids)
-    df1 = df[0:id]
-    df2 = df[id:]
+    for i in range(blk_to_change, blk_to_change + blk_size_to_change):
+        drop_ids.append(i)
+    #print(df)
+    df = df.drop(drop_ids)
+    df1 = df[0:blk_to_change]
+    df2 = df[blk_to_change:]
     df = pd.concat([df1, changed_blk], ignore_index=True)
     df = pd.concat([df, df2], ignore_index=True)
     
 
 print(df)
-#df.to_csv('./data/result/ingle_inserted_no_change.csv', header=False, index=None)
+df.to_csv('./data/result/single_inserted_change.csv', header=False, index=None)
