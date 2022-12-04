@@ -67,4 +67,4 @@ df = df.reset_index(drop=True)
 
 print(df)
 
-df.to_csv('./data/result/ingle_inserted_no_change.csv', header=False, index=None)
+#df.to_csv('./data/result/ingle_inserted_no_change.csv', header=False, index=None)
