@@ -96,7 +96,6 @@ if __name__ == '__main__':
     # categorical attributes. This order is produced
     # by the reading (from data set) order.
     DATA, INTUITIVE_ORDER = read_adult()
-    print('直感的な順番！！！！！', INTUITIVE_ORDER)
     
     if LEN_ARGV > 3:
         FLAG = sys.argv[3]

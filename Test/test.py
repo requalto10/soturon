@@ -1,36 +1,28 @@
 import pandas as pd
 
-df = pd.read_csv('../Mondrian/data/adult_index_added.csv',
-                 names=('age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status', 'occupation', 'relatioinship', 'race', 'sex', 'capital-gain', 'capital-loss', 'hours-per-week', 'index', 'income')
-                )
+raw_index_list = [
+    'age',
+    'a','b','c',
+    'education_num',
+    'd','e','f','g','h','i','j','k',
+    'id',
+    'income'
+]
 
-attribute_widths = {
-    'age': df['age'].max() - df['age'].min(),
-    'workclass': 8,
-    'fnlwgt': df['fnlwgt'].max() - df['fnlwgt'].min(),
-    'education': 16,
-    'education-num': df['education-num'].max() - df['education-num'].min(),
-    'marital-status': 7,
-    'occupation': 14,
-    'relatioinship': 6,
-    'race': 5,
-    'sex': 2,
-    'capital-gain': df['capital-gain'].max() - df['capital-gain'].min(),
-    'capital-loss': df['capital-loss'].max() - df['capital-loss'].min(),
-    'hours-per-week': df['hours-per-week'].max() - df['hours-per-week'].min(),
-}
-# print(attribute_widths['hours-per-week'])
+anonymized_index_list = [
+    'age',
+    'a',
+    'education_num',
+    'b','c','d','e',
+    'id',
+    'income'
+]
 
+df_raw = pd.read_csv('./data/adult_index_added.csv', names=raw_index_list)
+df_anonymized = pd.read_csv('./data/anonymized_k=10.csv', names=anonymized_index_list)
 
-att_values = []
-for i in range(3):
-    att_values.append(set())
+df_raw.drop(columns=['a','b','c','d','e','f','g','h','i','j','k'], inplace=True)
+df_anonymized.drop(columns=['a','b','c','d','e'], inplace=True)
 
-att_values[0].add(1)
-att_values[0].add(1)
-att_values[1].add(2)
-# print(att_values)
-
-
-
-
+df_raw.to_csv('./data/raw.csv', header=False, index=None)
+df_anonymized.to_csv('./data/k=10.csv', header=False, index=None)

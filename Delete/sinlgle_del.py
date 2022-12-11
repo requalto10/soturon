@@ -51,7 +51,7 @@ def convert_to_raw(result, connect_str='~'):
 
 
 df = pd.read_csv('./data/test3_9att_2int/test_k=2.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
-add_rec = pd.read_csv('./data/test3_9att_2int/rec_to_ins.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
+del_rec = pd.read_csv('./data/test3_9att_2int/rec_to_ins.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
 original = pd.read_csv('./data/test3_9att_2int/test_raw.csv', names=('age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex', 'index', 'income'))
 
 attribute_widths = {
@@ -68,8 +68,8 @@ cols = ['age', 'workclass', 'education-num', 'marital-status', 'occupation', 'ra
 QI_list = ['age', 'workclass', 'education-num', 'marital-status', 'occupation', 'race', 'sex']
 is_cat_list = [0, 1, 0, 1, 1, 1, 1]
 
-add_age = int(add_rec.at[0, 'age'])
-add_occ = add_rec.at[0, 'workclass']
+add_age = int(del_rec.at[0, 'age'])
+add_occ = del_rec.at[0, 'workclass']
 
 blks = count_blks(df)  # ブロックのサイズが上から順に格納されたリスト, ex)[3, 4, 2, ... , 3]
 
@@ -108,7 +108,7 @@ for i, blk_size in enumerate(blks):
                 IL_before += calc_int_IL(anonymized_int, domain)
 
     # add_recを（匿名化前の）ブロック末尾に追加
-    raw_blk = pd.concat([raw_blk, add_rec], ignore_index=True)
+    raw_blk = pd.concat([raw_blk, del_rec], ignore_index=True)
 
     raw_blk = raw_blk.values.tolist()  # DataFrameをリストに変換
     # カテゴリQIを数値に変換しないとけない

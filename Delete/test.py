@@ -1,12 +1,5 @@
 import pandas as pd
 
-
-df_raw = pd.read_csv('./data/evaluation/raw_9att.csv', names=index_list)
-print(df_raw['age'].max() - df_raw['age'].min())
-print(df_raw['education_num'].max() - df_raw['education_num'].min())
-
-
-
 df = pd.read_csv('../Mondrian/data/adult_index_added.csv',
                  names=('age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status', 'occupation', 'relatioinship', 'race', 'sex', 'capital-gain', 'capital-loss', 'hours-per-week', 'index', 'income')
                 )
@@ -37,3 +30,7 @@ att_values[0].add(1)
 att_values[0].add(1)
 att_values[1].add(2)
 # print(att_values)
+
+
+
+
