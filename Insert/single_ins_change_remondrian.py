@@ -58,10 +58,6 @@ original = pd.read_csv('./data/evaluation/raw_9att.csv', names=cols)
 
 
 attribute_widths = {
-    # 'age': 100,  # 100は適当
-    # 'education_num': 100,  # 100は適当
-    # 'age': original['age'].iloc[-1].max() - original['age'].iloc[-1].min(),
-    # 'education_num': original['education_num'].iloc[-1].max() - original['education_num'].iloc[-1].min(),
     'age': original['age'].max() - original['age'].min(),
     'education_num': original['education_num'].max() - original['education_num'].min(),
     'a': 0,

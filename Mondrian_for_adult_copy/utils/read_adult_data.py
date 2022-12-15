@@ -17,8 +17,8 @@ ATT_NAME = ['age', 'work_class', 'final_weight', 'education',
             'education_num', 'marital_status', 'occupation', 'relationship',
             'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week',
             'index', 'class']
-QI_INDEX = [0, 1, 4, 5, 6, 8, 9, 13]
-IS_CAT = [False, True, False, True, True, True, True, False]
+QI_INDEX = [0, 4, 13]
+IS_CAT = [False, False, False]
 SA_INDEX = -1
 __DEBUG = False
 
@@ -44,7 +44,7 @@ def read_data():
         intuitive_dict.append(dict())
         intuitive_number.append(0)
         intuitive_order.append(list())
-    data_file = open('data/raw_15att_int.csv', 'rU')
+    data_file = open('data/adult_index_added.csv', 'rU')
     for line in data_file:
         line = line.strip()
         # remove empty and incomplete lines

@@ -5,10 +5,8 @@ def calc_int_IL(anonymized_int, domain):
         return 0
     for i, c in enumerate(anonymized_int):
         if c == '~':
-            a = int(anonymized_int[:i])
-            b = int(anonymized_int[i+1:])
-            lower_limit = min(a, b)
-            upper_limit = max(a, b)
+            lower_limit = int(anonymized_int[:i])
+            upper_limit = int(anonymized_int[i+1:])
             break
     return (upper_limit - lower_limit) / domain
 
@@ -30,7 +28,6 @@ def count_blks(df):
     blks = []
     for id in range(1, len(df)):
         if df.at[id, 'age'] == df.at[id-1, 'age'] and df.at[id, 'education_num'] == df.at[id-1, 'education_num']:
-        # if df.iat[id, 0] == df.iat[id-1, 0] and df.iat[id, 1] == df.iat[id-1, 1]:
             count += 1
         else:
             blks.append(count)

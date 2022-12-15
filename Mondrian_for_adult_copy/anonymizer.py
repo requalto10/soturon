@@ -17,7 +17,7 @@ def write_to_file(result, qi_num):
     """
     write the anonymized result to anonymized.data
     """
-    with open("data/k=10_15att.csv", "w") as output:
+    with open("data/k=10_4att.csv", "w") as output:
         for r in result:
             output.write(','.join(r[:qi_num]) + ',' + str(r[qi_num]) + ',' + ','.join(r[qi_num+1:]) +',\n')
 

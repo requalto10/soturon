@@ -2,9 +2,39 @@ import pandas as pd
 from utils.utility import calc_int_IL, calc_cat_IL, count_blks
 from mondrian import mondrian
 import sys, copy, random
+import time
 
+# ここでkを指定
+K = 10 
+
+# データセットの読み込み
+cols = ['age', 'education_num', 'a', 'b', 'c', 'd', 'e', 'index', 'income']
+
+# 本番データ
+df = pd.read_csv('./data/evaluation/k=10_9att_new.csv', names=cols)
+del_rec = pd.read_csv('./data/evaluation/rec_to_del_new.csv', names=cols)
+original = pd.read_csv('./data/evaluation/raw_9att.csv', names=cols)
+
+# テストデータ
+# df = pd.read_csv('./data/test3_9att_2int/test_k=3.csv', names=cols)
+# del_rec = pd.read_csv('./data/test3_9att_2int/rec_to_del.csv', names=cols)
+# original = pd.read_csv('./data/test3_9att_2int/test_raw.csv', names=cols)
+
+# 各QIの数値範囲
+attribute_widths = {
+    'age': original['age'].max() - original['age'].min(),
+    'education_num': original['education_num'].max() - original['education_num'].min(),
+    'a': 0,
+    'b': 0,
+    'c': 0,
+    'd': 0,
+    'e': 0,
+}
+
+QI_list = ['age', 'education_num', 'a', 'b', 'c', 'd', 'e']
+is_cat_list = [0, 0, 0, 0, 0, 0, 0]
 INTUITIVE_ORDER = [[], [], [], [], [], [], [], []]
-K = 2  # ここでkを指定
+
 
 def get_result_qi(data, qi_num, k=5):
     k, qi_num = int(k), int(qi_num)
@@ -46,27 +76,9 @@ def convert_to_raw(result, connect_str='~'):
             convert_result.append(convert_record + [connect_str.join(record[-1])])
     return convert_result
 
-cols = ['age', 'education_num', 'a', 'b', 'c', 'd', 'e', 'index', 'income']
 
-df = pd.read_csv('../Insert/data/test3_9att_2int/test_k=2.csv', names=cols)
-add_rec = pd.read_csv('../Insert/data/test3_9att_2int/rec_to_ins.csv', names=cols)
-original = pd.read_csv('../Insert/data/test3_9att_2int/test_raw.csv', names=cols)
-
-
-attribute_widths = {
-    'age': original['age'].max() - original['age'].min(),
-    'education_num': original['education_num'].max() - original['education_num'].min(),
-    'a': 0,
-    'b': 0,
-    'c': 0,
-    'd': 0,
-    'e': 0,
-}
-
-QI_list = ['age', 'education_num', 'a', 'b', 'c', 'd', 'e']
-is_cat_list = [0, 0, 0, 0, 0, 0, 0]
-
-def insert(df, add_rec, original):
+# 引数は全てDataFrame
+def insert(df, add_rec, original, K):
     blks = count_blks(df)  # ブロックのサイズが上から順に格納されたリスト, ex)[3, 4, 2, ... , 3]
     IL_diff = 1000000
     blk_to_change = -1  # 追加先ブロックの先頭行インデックス
@@ -149,5 +161,47 @@ def insert(df, add_rec, original):
         df = pd.concat([df1, changed_blk], ignore_index=True)
         df = pd.concat([df, df2], ignore_index=True) 
 
-print(type(add_rec), '\n', add_rec)
-insert(df, add_rec, original)
+    return df   
+
+
+# ここからDELETE
+start_time = time.time()
+
+del_index = del_rec.at[0,'index']
+blks = count_blks(df)
+
+head_id = -1
+ungroup_blk_size = -1
+del_id = df.query('index == @del_index').index[-1]
+
+if del_id == 0:
+    head_id = 0
+    ungroup_blk_size = blks[0]
+else:
+    for i, blk_size in enumerate(blks):
+        if sum(blks[:i]) > del_id:
+            head_id = sum(blks[:i-1])
+            ungroup_blk_size = blks[i-1]
+            break
+
+if ungroup_blk_size > K:
+    df.drop(del_id, inplace=True)
+    print('Deleted without ungrouping!')
+else:
+    ungroup_blk = df[head_id:head_id + ungroup_blk_size]
+    ungroup_blk = ungroup_blk[df['index'] != del_index]  # UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    df.drop(list(range(head_id, head_id + ungroup_blk_size)), inplace=True)
+    df = df.reset_index(drop=True)
+
+    for i in range(ungroup_blk_size - 1):
+        anonymized_add_rec = ungroup_blk.iloc[[i], :]  # 行番号を[i]とすることでSeriesではなくDataFrameを取得
+        add_rec_index = anonymized_add_rec.iat[0, 7]
+        raw_add_rec = original[original['index'] == add_rec_index]
+        print(f'inserting {i} th record ...')
+        df = insert(df, raw_add_rec, original, K)
+
+end_time = time.time()
+print('Finish!')
+print(f'Execution time: {end_time - start_time} s')
+df.to_csv('./data/result/deleted_result_new.csv', header=False, index=None)
+# df.to_csv('./data/result/test_deleted_result.csv', header=False, index=None)
