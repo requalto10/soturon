@@ -23,6 +23,8 @@ df_after = pd.read_csv("./data/result/deleted_result_new.csv", names=index_list)
 # df_before = pd.read_csv("./data/test3_9att_2int/test_k=3.csv", names=index_list)
 # df_after = pd.read_csv("./data/result/test_deleted_result.csv", names=index_list)
 
+QI_num = 2
+data_size = len(original)
 
 age_domain = original['age'].max() - original['age'].min()
 educ_num_domain = original['education_num'].max() - original['education_num'].min()
@@ -32,10 +34,13 @@ for index, record in df_before.iterrows():
     IL_before += calc_int_IL(df_before.loc[index, 'age'], age_domain)
     IL_before += calc_int_IL(df_before.loc[index, 'education_num'], educ_num_domain)
 
-print(f'IL_before : {IL_before}')
+
 
 for index, record in df_after.iterrows():
     IL_after += calc_int_IL(df_after.loc[index, 'age'], age_domain)
     IL_after += calc_int_IL(df_after.loc[index, 'education_num'], educ_num_domain)
 
-print(f'IL_after : {IL_after}')
+print(f'IL_before : {IL_before}')
+print(f'IL_after : {IL_after}\n')
+print(f'NCP_average_before : {IL_before / QI_num / data_size * 100}%')
+print(f'NCP_average_after : {IL_after / QI_num / data_size * 100}%')
