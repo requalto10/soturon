@@ -5,15 +5,15 @@ import sys, copy, random
 import time
 
 # ここでkを指定
-K = 2
+K = 4
 
 # データセットの読み込み
 cols = ['age', 'education_num', 'index', 'income']
 
 # 本番データ
-df = pd.read_csv(f'./ins_data/evaluation/anonymized/k={K}_4att.csv', names=cols)
-add_rec = pd.read_csv(f'./ins_data/evaluation/to_insert.csv', names=cols)
-original = pd.read_csv('./ins_data/evaluation/raw_4att.csv', names=cols)
+df = pd.read_csv(f'./insurance_data/evaluation/anonymized/k={K}_4att.csv', names=cols)
+add_rec = pd.read_csv(f'./insurance_data/evaluation/to_insert.csv', names=cols)
+original = pd.read_csv('./insurance_data/evaluation/raw_4att.csv', names=cols)
 
 # 各QIの数値範囲
 attribute_widths = {
