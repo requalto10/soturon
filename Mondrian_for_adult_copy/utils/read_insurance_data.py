@@ -13,10 +13,11 @@ read adult data set
 # SA ['occupation']
 
 
-ATT_NAME = ['age', 'work_class', 'final_weight', 'education',
-            'education_num', 'marital_status', 'occupation', 'relationship',
-            'race', 'sex', 'capital_gain', 'capital_loss', 'hours_per_week',
-            'index', 'class']
+ATT_NAME = ['age',
+            'income',
+            'a','b','c','d','e','f','g','h','i','j','k',
+            'index',
+            'charges']
 QI_INDEX = [0,1,2,3,4,5,12,13]
 IS_CAT = [False, False, False, False, False, False, False, False]
 SA_INDEX = -1

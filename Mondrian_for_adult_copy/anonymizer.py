@@ -6,6 +6,7 @@ run mondrian with given parameters
 # coding=utf-8
 from mondrian import mondrian
 from utils.read_adult_data import read_data as read_adult
+from utils.read_insurance_data import read_data as read_insurance
 import sys, copy, random
 
 DATA_SELECT = 'a'
@@ -17,7 +18,7 @@ def write_to_file(result, qi_num):
     """
     write the anonymized result to anonymized.data
     """
-    with open("data/k=10_4att.csv", "w") as output:
+    with open("data/k=64_9att.csv", "w") as output:
         for r in result:
             output.write(','.join(r[:qi_num]) + ',' + str(r[qi_num]) + ',' + ','.join(r[qi_num+1:]) +',\n')
 
@@ -95,7 +96,10 @@ if __name__ == '__main__':
     # INTUITIVE_ORDER is an intuitive order for
     # categorical attributes. This order is produced
     # by the reading (from data set) order.
-    DATA, INTUITIVE_ORDER = read_adult()
+
+    # DATA, INTUITIVE_ORDER = read_adult()
+    DATA, INTUITIVE_ORDER = read_insurance()
+
     
     if LEN_ARGV > 3:
         FLAG = sys.argv[3]
